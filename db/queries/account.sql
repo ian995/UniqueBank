@@ -17,10 +17,11 @@ SELECT * FROM accounts
 ORDER BY id_account
 LIMIT $1 OFFSET $2;
 
--- name: UpdateAccount :exec
+-- name: UpdateAccount :one
 UPDATE accounts
   set balance = $2
-WHERE id_account = $1;
+WHERE id_account = $1
+RETURNING *;
 
 -- name: DeleteAccount :exec
 DELETE FROM accounts
