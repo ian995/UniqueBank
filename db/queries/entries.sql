@@ -21,7 +21,3 @@ SELECT * FROM entries
 WHERE id_account = $3
 ORDER BY id_entries
 LIMIT $1 OFFSET $2;
-
--- name: DeleteEntry :exec
-DELETE FROM entries
-WHERE id_entries = $1;

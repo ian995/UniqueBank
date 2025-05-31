@@ -31,8 +31,3 @@ SELECT * FROM transfers
 WHERE from_id_account = $3
 ORDER BY id_transfer
 LIMIT $1 OFFSET $2;
-
-
--- name: DeleteTransfer :exec
-DELETE FROM transfers
-WHERE id_transfer = $1;

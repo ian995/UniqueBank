@@ -40,6 +40,9 @@ func RandomCurrency() string {
 }
 
 
-func RandomMoney() string {
+func RandomMoneyStr() string {
 	return strconv.FormatInt(RandomInt(0, 1000), 10)
+}
+func RandomMoney() int64 {
+	return RandomInt(0, 1000)
 }
