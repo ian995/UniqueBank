@@ -1,13 +1,13 @@
 package tests
 
 import (
-	"context"
 	"log"
 	"os"
 	"testing"
+	"database/sql"
+	 _ "github.com/lib/pq"
 
-	"github.com/ian995/UniqueBank/db/sqlc"
-	"github.com/jackc/pgx/v5"
+	"github.com/ian995/UniqueBank/internal/repo"
 )
 
 const (
@@ -15,19 +15,15 @@ const (
 	dbSource = "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable"
 )
 
-var testQueries *db.Queries
+var testQueries *repo.Queries
 
 func TestMain(m *testing.M) {
-	ctx := context.Background()
-
-	
-	conn, err := pgx.Connect(ctx, dbSource)
+	conn, err := sql.Open(dbDriver, dbSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
-	defer conn.Close(ctx)
 
-	testQueries = db.New(conn)
+	testQueries = repo.New(conn)
 
 	os.Exit(m.Run())
 }

@@ -2,10 +2,10 @@
 // versions:
 //   sqlc v1.29.0
 
-package db
+package repo
 
 import (
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 type Account struct {
@@ -13,14 +13,14 @@ type Account struct {
 	Owner     string
 	Balance   string
 	Currency  string
-	CreateAt  pgtype.Timestamptz
+	CreateAt  time.Time
 }
 
 type Entry struct {
 	IDEntries int64
 	IDAccount int64
 	Amount    int64
-	CreateAt  pgtype.Timestamptz
+	CreateAt  time.Time
 }
 
 type Transfer struct {
@@ -28,5 +28,5 @@ type Transfer struct {
 	FromIDAccount int64
 	ToIDAccount   int64
 	Amount        int64
-	CreateAt      pgtype.Timestamptz
+	CreateAt      time.Time
 }

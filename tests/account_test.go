@@ -5,13 +5,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ian995/UniqueBank/db/sqlc"
+	"github.com/ian995/UniqueBank/internal/repo"
 	"github.com/ian995/UniqueBank/pkg/utils"
 	"github.com/stretchr/testify/require"
 )
 
-func createRandomAccount(t *testing.T) db.Account {
-	arg := db.CreateAccountParams{
+func createRandomAccount(t *testing.T) repo.Account {
+	arg := repo.CreateAccountParams{
 		Owner:    utils.RandomOwner(),
 		Balance:  utils.RandomMoney(),
 		Currency: utils.RandomCurrency(),
@@ -43,13 +43,13 @@ func TestGetAccount(t *testing.T) {
 	require.Equal(t, account1.Owner, account2.Owner)
 	require.Equal(t, account1.Balance, account2.Balance)
 	require.Equal(t, account1.Currency, account2.Currency)
-	require.WithinDuration(t, account1.CreateAt.Time, account2.CreateAt.Time, time.Second)
+	require.WithinDuration(t, account1.CreateAt, account2.CreateAt, time.Second)
 }
 
 func TestUpdateAccount(t *testing.T) {
 	account1 := createRandomAccount(t)
 
-	arg := db.UpdateAccountParams{
+	arg := repo.UpdateAccountParams{
 		IDAccount: account1.IDAccount,
 		Balance:   utils.RandomMoney(),
 	}
@@ -62,7 +62,7 @@ func TestUpdateAccount(t *testing.T) {
 	require.Equal(t, account1.Owner, account2.Owner)
 	require.Equal(t, arg.Balance, account2.Balance)
 	require.Equal(t, account1.Currency, account2.Currency)
-	require.WithinDuration(t, account1.CreateAt.Time, account2.CreateAt.Time, time.Second)
+	require.WithinDuration(t, account1.CreateAt, account2.CreateAt, time.Second)
 }
 
 func TestDeleteAccount(t *testing.T) {
@@ -82,7 +82,7 @@ func TestListAccounts(t *testing.T) {
 		createRandomAccount(t)
 	}
 
-	arg := db.ListAccountsParams{
+	arg := repo.ListAccountsParams{
 		Limit:  5,
 		Offset: 5,
 	}
