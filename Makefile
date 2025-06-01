@@ -7,13 +7,13 @@ dropdb:
 	docker exec -it postgres17 dropdb --username=root --if-exists uniquebank
 
 migrateup:
-	migrate -path ../db/migrations -database "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable" -verbose up
+	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable" -verbose up
 
 migratedown:
-	migrate -path ../db/migrations -database "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable" -verbose down
+	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable" -verbose down
 
 sqlc:
-	sqlc generate -f ../config/sqlc.yaml
+	sqlc generate -f config/sqlc.yaml
 
 test:
 	go test ./... -v -coverpkg=./...
