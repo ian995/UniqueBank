@@ -1,7 +1,7 @@
 CREATE TABLE "accounts" (
   "id_account" bigserial PRIMARY KEY,
   "owner" varchar NOT NULL,
-  "balance" varchar NOT NULL,
+  "balance" bigint NOT NULL,
   "currency" varchar NOT NULL,
   "create_at" timestamptz NOT NULL DEFAULT (now())
 );

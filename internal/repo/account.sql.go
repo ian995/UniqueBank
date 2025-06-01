@@ -9,6 +9,31 @@ import (
 	"context"
 )
 
+const addAccountBalance = `-- name: AddAccountBalance :one
+UPDATE accounts
+  set balance = balance + $1
+WHERE id_account = $2
+RETURNING id_account, owner, balance, currency, create_at
+`
+
+type AddAccountBalanceParams struct {
+	Amount    int64
+	IDAccount int64
+}
+
+func (q *Queries) AddAccountBalance(ctx context.Context, arg AddAccountBalanceParams) (Account, error) {
+	row := q.db.QueryRowContext(ctx, addAccountBalance, arg.Amount, arg.IDAccount)
+	var i Account
+	err := row.Scan(
+		&i.IDAccount,
+		&i.Owner,
+		&i.Balance,
+		&i.Currency,
+		&i.CreateAt,
+	)
+	return i, err
+}
+
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts (
   owner,
@@ -22,7 +47,7 @@ RETURNING id_account, owner, balance, currency, create_at
 
 type CreateAccountParams struct {
 	Owner    string
-	Balance  string
+	Balance  int64
 	Currency string
 }
 
@@ -56,6 +81,25 @@ WHERE id_account = $1 LIMIT 1
 
 func (q *Queries) GetAccount(ctx context.Context, idAccount int64) (Account, error) {
 	row := q.db.QueryRowContext(ctx, getAccount, idAccount)
+	var i Account
+	err := row.Scan(
+		&i.IDAccount,
+		&i.Owner,
+		&i.Balance,
+		&i.Currency,
+		&i.CreateAt,
+	)
+	return i, err
+}
+
+const getAccountForUpdate = `-- name: GetAccountForUpdate :one
+SELECT id_account, owner, balance, currency, create_at FROM accounts
+WHERE id_account = $1 LIMIT 1
+FOR NO KEY UPDATE
+`
+
+func (q *Queries) GetAccountForUpdate(ctx context.Context, idAccount int64) (Account, error) {
+	row := q.db.QueryRowContext(ctx, getAccountForUpdate, idAccount)
 	var i Account
 	err := row.Scan(
 		&i.IDAccount,
@@ -116,7 +160,7 @@ RETURNING id_account, owner, balance, currency, create_at
 
 type UpdateAccountParams struct {
 	IDAccount int64
-	Balance   string
+	Balance   int64
 }
 
 func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {

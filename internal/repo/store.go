@@ -63,6 +63,7 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParam) (Transf
 		if err != nil {
 			return err
 		}
+
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			IDAccount: arg.FromIDAccount,
 			Amount:    -arg.Amount,
@@ -78,6 +79,23 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParam) (Transf
 			return err
 		}
 
+
+		result.FromAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			IDAccount: arg.FromIDAccount,
+			Amount:   -arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
+
+		result.ToAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			IDAccount: arg.ToIDAccount,
+			Amount:   arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
+		
 
 		return nil
 	})

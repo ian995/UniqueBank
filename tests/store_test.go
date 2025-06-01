@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/ian995/UniqueBank/internal/repo"
@@ -34,6 +35,8 @@ func TestTransferTx(t *testing.T) {
 		}()
 	}
 
+	existed := make(map[int]bool)
+
 	for range n {
 		err := <-errs
 		require.NoError(t, err)
@@ -46,7 +49,7 @@ func TestTransferTx(t *testing.T) {
 		require.Equal(t, amount, transfer.Amount)
 		require.NotZero(t, transfer.IDTransfer)
 		require.NotZero(t, transfer.CreateAt)		
-		_, err = store.GetTransfer(context.Background(), account1.IDAccount)
+		_, err = store.GetTransfer(context.Background(), transfer.IDTransfer)
 		require.NoError(t, err)
 
 
@@ -69,6 +72,38 @@ func TestTransferTx(t *testing.T) {
 		require.NoError(t, err)
 
 
+		//check account balance
+		fromAccount := result.FromAccount 
+		require.NoError(t, err)
+		require.NotEmpty(t, fromAccount)
+
+		toAccount := result.ToAccount
+		require.NoError(t, err)
+		require.NotEmpty(t, toAccount)
+
+		diff1 :=  account1.Balance - fromAccount.Balance
+		fmt.Println("diff1 >>", diff1,  account1.Balance, fromAccount.Balance)
+		diff2 :=   toAccount.Balance - account2.Balance
+		fmt.Println("diff2 >>", diff2,  toAccount.Balance, account2.Balance)
+		require.Equal(t, diff1, diff2)
+		require.True(t, diff1 > 0)
+		require.True(t, diff1%amount == 0)
+
+		k := int(diff1 / amount)
+		fmt.Println("k >>", k)
+		require.True(t, k>=1 && k<=n)
+		require.NotContains(t, existed, k)
+		existed[k] = true
+
 	}
+
+	updatedAccount1, err := store.GetAccount(context.Background(), account1.IDAccount)
+	require.NoError(t, err)
+
+	updatedAccount2, err := store.GetAccount(context.Background(), account2.IDAccount)
+	require.NoError(t, err)
+
+	require.Equal(t, account1.Balance-int64(n)*amount, updatedAccount1.Balance)
+	require.Equal(t, account2.Balance+int64(n)*amount, updatedAccount2.Balance)
 	
 }

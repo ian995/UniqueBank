@@ -2,7 +2,6 @@ package utils
 
 import (
 	"math/rand"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -39,10 +38,6 @@ func RandomCurrency() string {
 	return currencies[rand.Intn(n)]
 }
 
-
-func RandomMoneyStr() string {
-	return strconv.FormatInt(RandomInt(0, 1000), 10)
-}
 func RandomMoney() int64 {
 	return RandomInt(0, 1000)
 }
