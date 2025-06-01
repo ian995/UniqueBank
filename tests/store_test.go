@@ -2,7 +2,6 @@ package tests
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/ian995/UniqueBank/internal/repo"
@@ -82,15 +81,12 @@ func TestTransferTx(t *testing.T) {
 		require.NotEmpty(t, toAccount)
 
 		diff1 :=  account1.Balance - fromAccount.Balance
-		fmt.Println("diff1 >>", diff1,  account1.Balance, fromAccount.Balance)
 		diff2 :=   toAccount.Balance - account2.Balance
-		fmt.Println("diff2 >>", diff2,  toAccount.Balance, account2.Balance)
 		require.Equal(t, diff1, diff2)
 		require.True(t, diff1 > 0)
 		require.True(t, diff1%amount == 0)
 
 		k := int(diff1 / amount)
-		fmt.Println("k >>", k)
 		require.True(t, k>=1 && k<=n)
 		require.NotContains(t, existed, k)
 		existed[k] = true
