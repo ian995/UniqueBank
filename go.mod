@@ -6,6 +6,7 @@ toolchain go1.23.9
 
 require (
 	github.com/gin-gonic/gin v1.10.1
+	github.com/golang/mock v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0

@@ -1,16 +1,16 @@
 package routers
 
 import (
-	"github.com/ian995/UniqueBank/internal/repo"
 	"github.com/gin-gonic/gin"
+	"github.com/ian995/UniqueBank/internal/repo"
 )
 
 type Server struct {
-	store *repo.Store
-	router *gin.Engine
+	store  repo.Store
+	Router *gin.Engine
 }
 
-func NewServer(store *repo.Store) *Server {
+func NewServer(store repo.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
 
@@ -18,14 +18,13 @@ func NewServer(store *repo.Store) *Server {
 	router.GET("/accounts/:id_account", server.getAccount)
 	router.GET("/accounts", server.listAccount)
 
-	server.router = router
+	server.Router = router
 	return server
 }
 
 func (server *Server) Start(address string) error {
-	return server.router.Run(address)
+	return server.Router.Run(address)
 }
-
 
 func errorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}

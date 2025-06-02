@@ -21,4 +21,7 @@ test:
 server:
 	go run cmd/server/main.go
 
+mock:
+	mockgen -source=internal/repo/store.go -package mock_test -aux_files=github.com/ian995/UniqueBank/internal/repo=internal/repo/querier.go  -destination=tests/mock/mock_db.go
+
 .phony: postgres createdb dropdb migrateup migratedown sqlc test server
