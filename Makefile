@@ -8,9 +8,15 @@ dropdb:
 
 migrateup:
 	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable" -verbose up
+	
+migrateup1:
+	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable" -verbose up 1
 
 migratedown:
 	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable" -verbose down
+
+migratedown1:
+	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/uniquebank?sslmode=disable" -verbose down 1
 
 sqlc:
 	sqlc generate -f config/sqlc.yaml
@@ -24,4 +30,4 @@ server:
 mock:
 	mockgen -source=internal/repo/store.go -package mock_test -aux_files=github.com/ian995/UniqueBank/internal/repo=internal/repo/querier.go  -destination=tests/mock/mock_db.go
 
-.phony: postgres createdb dropdb migrateup migratedown sqlc test server
+.phony: postgres createdb dropdb migrateup migratedown sqlc test server migratedown1 migrateup1
