@@ -41,3 +41,7 @@ func RandomCurrency() string {
 func RandomMoney() int64 {
 	return RandomInt(0, 1000)
 }
+
+func RandomEmail() string {
+	return RandomString(6) + "@" + RandomString(5) + ".com"
+}
